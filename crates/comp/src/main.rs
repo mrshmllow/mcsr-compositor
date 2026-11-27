@@ -1,7 +1,10 @@
 use clap::Parser;
 use tracing::{info, trace};
 
-use crate::cli::{Cli, Commands};
+use crate::{
+    cli::{Cli, Commands},
+    config::ConfigEngine,
+};
 
 mod cli;
 mod config;
@@ -14,7 +17,7 @@ fn init_tracing() {
     tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
 }
 
-fn main() {
+fn main() -> Result<(), anyhow::Error> {
     init_tracing();
 
     let args = Cli::parse();
@@ -22,12 +25,18 @@ fn main() {
     let Commands::Wrap {
         arguments,
         config_plugin,
-        config,
+        // config,
         ..
     } = args.command;
 
-    info!(config_plugin = ?config_plugin, config = ?config);
-
+    info!(config_plugin = ?config_plugin);
     trace!(arguments = ?arguments);
-    info!("Hello, world!");
+
+    let mut conf = ConfigEngine::new(config_plugin)?;
+
+    info!(tick = ?conf.tick());
+
+    // info!(config = ?conf);
+
+    Ok(())
 }
