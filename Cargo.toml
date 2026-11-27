@@ -1,6 +1,6 @@
 #:schema https://json.schemastore.org/cargo.json
 [workspace]
-members = ["crates/comp"]
+members = ["crates/backend-kdl","crates/backend-lua","crates/comp"]
 resolver = "2"
 package.edition = "2024"
 package.version = "0.1.0"

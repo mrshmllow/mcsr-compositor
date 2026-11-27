@@ -1,0 +1,10 @@
+[package]
+name = "backend-kdl"
+edition.workspace = true
+version.workspace = true
+
+[dependencies]
+kdl = "6.7.1"
+
+[lints]
+workspace = true

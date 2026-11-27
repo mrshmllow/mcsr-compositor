@@ -1,0 +1,23 @@
+package comp:config@0.1.0;
+
+interface host {
+    set: func(key: string, value: value);
+    log: func(msg: string);
+
+    variant value {
+        str(string),
+        int(s64),
+        float(f64),
+        boolean(bool),
+    }
+}
+
+world backend {
+    import host;
+
+    // Called once with the raw source text
+    export load: func(source: string) -> result<_, string>;
+
+    // Called by the comps's loop.
+    export tick: func() -> result<_, string>;
+}

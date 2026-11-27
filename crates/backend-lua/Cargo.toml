@@ -1,0 +1,10 @@
+[package]
+name = "backend-lua"
+edition.workspace = true
+version.workspace = true
+
+[dependencies]
+mlua = { version = "0.12.3", features = ["macros"] }
+
+[lints]
+workspace = true

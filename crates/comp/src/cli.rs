@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
@@ -13,6 +15,12 @@ pub(crate) enum Commands {
     ///
     /// You should pass this as a launcher wrapper command, ie `comp wrap --`.
     Wrap {
+        #[arg(long)]
+        config_plugin: PathBuf,
+
+        #[arg(long)]
+        config: PathBuf,
+
         #[arg(last = true)]
         arguments: Vec<String>,
     },
