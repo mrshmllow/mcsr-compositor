@@ -7,7 +7,7 @@ version.workspace = true
 crate-type = ["cdylib"]
 
 [dependencies]
-mlua = { version = "0.12.3", features = ["macros", "luau-jit"] }
+mlua = { version = "0.12.3", features = ["macros", "lua54", "vendored"] }
 wit-bindgen.workspace = true
 
 [lints]

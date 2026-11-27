@@ -7,6 +7,7 @@ use crate::{
 };
 
 mod cli;
+mod compositor;
 mod config;
 
 fn init_tracing() {

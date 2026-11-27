@@ -1,6 +1,6 @@
-use std::{path::PathBuf, str::FromStr};
+use std::str::FromStr;
 
-use clap::{Parser, Subcommand, ValueEnum};
+use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]

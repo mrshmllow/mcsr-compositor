@@ -2,10 +2,10 @@ use std::path::PathBuf;
 
 use tracing::{info, instrument};
 use wasmtime::{
-    Engine, Store,
     component::{Component, Instance, Linker, TypedFunc},
+    Engine, Store,
 };
-use wasmtime_wasi::{FsPerms, ResourceTable, WasiCtx, WasiCtxView, WasiView};
+use wasmtime_wasi::{ResourceTable, WasiCtx, WasiCtxView, WasiView};
 
 use crate::cli::ConfigPlugin;
 
@@ -14,7 +14,7 @@ wasmtime::component::bindgen!({
     path: "../../wit",
 });
 
-pub(crate) struct ConfigEngine {
+pub struct ConfigEngine {
     instance: Instance,
     store: Store<MyState>,
 
@@ -36,7 +36,7 @@ impl WasiView for MyState {
 }
 
 impl comp::config::host::Host for ConfigEngine {
-    fn set(&mut self, key: String, value: comp::config::host::Value) {
+    fn set(&mut self, _key: String, _value: comp::config::host::Value) {
         // self.config.insert(key, value);
     }
 
@@ -63,7 +63,7 @@ impl ConfigEngine {
 
         let mut builder = WasiCtx::builder();
 
-        builder.preopened_dir("/uiahsduiashd/", "/config", FsPerms::ReadWrite)?;
+        // builder.preopened_dir("/uiahsduiashd/", "/config", FsPerms::ReadWrite)?;
 
         let mut store = Store::new(
             &engine,

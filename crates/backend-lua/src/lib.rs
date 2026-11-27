@@ -1,3 +1,5 @@
+use mlua::{Function, Lua};
+
 wit_bindgen::generate!({
     world: "backend",
     path: "../../wit",
@@ -11,7 +13,23 @@ impl Guest for Component {
     }
 
     fn tick() -> ::core::result::Result<(), _rt::String> {
-        return Err("hi :(".to_string());
+        let lua = Lua::new();
+        let globals = lua.globals();
+
+        lua.load(
+            r#"
+        function greet(name)
+            return "Hello from Lua, " .. name .. "!"
+        end
+        "#,
+        )
+        .exec()
+        .unwrap();
+
+        let greet: Function = globals.get("greet").unwrap();
+        let message: String = greet.call("jude love").unwrap();
+
+        Err(message)
     }
 }
 
