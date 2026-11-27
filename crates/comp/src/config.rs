@@ -5,7 +5,7 @@ use wasmtime::{StoreLimits, component::*};
 
 wasmtime::component::bindgen!({
     world: "backend",
-    path: "wit",
+    path: "../../wit",
 });
 
 struct HostState {

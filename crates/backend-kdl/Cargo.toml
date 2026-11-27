@@ -3,8 +3,12 @@ name = "backend-kdl"
 edition.workspace = true
 version.workspace = true
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
 kdl = "6.7.1"
+wit-bindgen.workspace = true
 
 [lints]
 workspace = true
