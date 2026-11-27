@@ -6,7 +6,7 @@ wit_bindgen::generate!({
 struct Component;
 
 impl Guest for Component {
-    fn load(source: _rt::String) -> ::core::result::Result<(), _rt::String> {
+    fn load(_source: _rt::String) -> ::core::result::Result<(), _rt::String> {
         todo!();
     }
 

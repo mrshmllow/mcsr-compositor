@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use tracing::info;
-use wasmtime::{StoreLimits, component::*};
+use wasmtime::{StoreLimits, component::{ComponentType, ResourceTable}};
 
 wasmtime::component::bindgen!({
     world: "backend",
