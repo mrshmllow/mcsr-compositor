@@ -1,0 +1,1 @@
+little experimental minecraft compositor for speedrunning. currently, the plan is that you will be able to write the configuration in any language via wasm components, but we will vendor 2 builin config backends (KDL and Lua)
