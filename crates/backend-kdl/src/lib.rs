@@ -11,7 +11,7 @@ impl Guest for Component {
     }
 
     fn tick() -> ::core::result::Result<(), _rt::String> {
-        Ok(())
+        Err("hello from wasm :3".to_string())
     }
 }
 

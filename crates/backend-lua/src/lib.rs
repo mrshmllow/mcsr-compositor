@@ -1,4 +1,4 @@
-use mlua::{Function, Lua};
+use mlua::{Function, Lua, chunk};
 
 wit_bindgen::generate!({
     world: "backend",
@@ -16,18 +16,16 @@ impl Guest for Component {
         let lua = Lua::new();
         let globals = lua.globals();
 
-        lua.load(
-            r#"
+        lua.load(chunk! {
         function greet(name)
             return "Hello from Lua, " .. name .. "!"
         end
-        "#,
-        )
+        })
         .exec()
         .unwrap();
 
         let greet: Function = globals.get("greet").unwrap();
-        let message: String = greet.call("jude love").unwrap();
+        let message: String = greet.call("ili").unwrap();
 
         Err(message)
     }

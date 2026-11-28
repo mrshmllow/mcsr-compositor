@@ -45,15 +45,26 @@
         shellHook = builtins.concatStringsSep "\n" [
           cfg.installationScript
           ''
-            # cc-rs must use the wasm cross compiler for the wasm32-wasip2
-            # target; the global CC/CXX from stdenv point at the host.
+            # cc-rs must use the wasm cross compiler for the wasm targets;
+            # the global CC/CXX from stdenv point at the host.
             export CC_wasm32_wasip2="${wasiCC}"
             export CXX_wasm32_wasip2="${wasiCXX}"
             export AR_wasm32_wasip2="${wasiAR}"
+            export CC_wasm32_wasip3="${wasiCC}"
+            export CXX_wasm32_wasip3="${wasiCXX}"
+            export AR_wasm32_wasip3="${wasiAR}"
 
-            # lua-src links wasi-libc's setjmp and wasi-emulated-signal.
+            # lua-src links wasi-libc's setjmp and wasi-emulated-signal, and
             # Lua's setjmp/longjmp needs wasm exception handling.
+            #
+            # Only do this for wasip2: the nixpkgs wasi-libc is built for
+            # wasip1, and adding it to the wasip3 link shadows Rust's own
+            # cooperative-threading libc.
             export CARGO_TARGET_WASM32_WASIP2_RUSTFLAGS="-Lnative=${wasiLibDir} -Ctarget-feature=+exception-handling"
+
+            # Older versions of this shell exported this for wasip3 too, which
+            # shadowed Rust's wasip3 libc with the wasip1 one.
+            unset CARGO_TARGET_WASM32_WASIP3_RUSTFLAGS
           ''
         ];
       };

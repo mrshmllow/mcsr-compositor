@@ -1,11 +1,12 @@
 use std::path::PathBuf;
 
+use anyhow::Context;
 use tracing::{info, instrument};
 use wasmtime::{
-    component::{Component, Instance, Linker, TypedFunc},
     Engine, Store,
+    component::{Component, Instance, Linker, TypedFunc},
 };
-use wasmtime_wasi::{ResourceTable, WasiCtx, WasiCtxView, WasiView};
+use wasmtime_wasi::{FsPerms, ResourceTable, WasiCtx, WasiCtxView, WasiView};
 
 use crate::cli::ConfigPlugin;
 
@@ -15,7 +16,7 @@ wasmtime::component::bindgen!({
 });
 
 pub struct ConfigEngine {
-    instance: Instance,
+    _instance: Instance,
     store: Store<MyState>,
 
     tick_func: TypedFunc<(), (Result<(), String>,)>,
@@ -54,6 +55,16 @@ impl ConfigEngine {
         }
     }
 
+    #[instrument(ret)]
+    pub(crate) fn get_ensure_user_config_directory() -> anyhow::Result<PathBuf> {
+        let xdg_dirs = xdg::BaseDirectories::with_prefix("mcsr-compositor");
+        let config_dir = xdg_dirs.get_config_home().context("could not get HOME")?;
+        std::fs::create_dir_all(&config_dir).context("creating config directory")?;
+
+        Ok(config_dir)
+    }
+
+    #[instrument()]
     pub(crate) fn new(plugin: ConfigPlugin) -> anyhow::Result<Self> {
         let engine = Engine::default();
 
@@ -63,7 +74,11 @@ impl ConfigEngine {
 
         let mut builder = WasiCtx::builder();
 
-        // builder.preopened_dir("/uiahsduiashd/", "/config", FsPerms::ReadWrite)?;
+        builder.preopened_dir(
+            Self::get_ensure_user_config_directory().expect("could not get HOME"),
+            "/config",
+            FsPerms::ReadWrite,
+        )?;
 
         let mut store = Store::new(
             &engine,
@@ -79,7 +94,7 @@ impl ConfigEngine {
             instance.get_typed_func(&mut store, "tick")?;
 
         Ok(Self {
-            instance,
+            _instance: instance,
             store,
             tick_func,
         })
